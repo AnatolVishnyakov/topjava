@@ -26,18 +26,6 @@ public class UserMealsUtil {
         mealsWithExceeded.forEach(System.out::println);
     }
 
-    /*
-    public static List<UserMealWithExceed> getFilteredMealsWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        return mealList.stream()
-                .filter(userMeal -> {
-                    LocalTime currentTime = userMeal.getDateTime().toLocalTime();
-                    return currentTime.isAfter(startTime) && currentTime.isBefore(endTime);
-                })
-                .map(userMeal -> new UserMealWithExceed(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(), (userMeal.getCalories() > caloriesPerDay)))
-                .collect(Collectors.toList());
-    }
-    * */
-
     public static List<UserMealWithExceed> getFilteredWithExceeded(List<UserMeal> userMeals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         Map<LocalDate, Integer> caloriesSumByDate = userMeals.stream()
                 .collect(
