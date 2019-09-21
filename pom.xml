@@ -53,6 +53,7 @@
             hibernate, spring, во всех apache проектах), мы
             через него не логируем, а перенаправляем в slf4j -->
             <groupId>org.slf4j</groupId>
+            <!-- Java Commons Logging (JCL) использует Spring -->
             <artifactId>jcl-over-slf4j</artifactId>
             <version>${slf4j.version}</version>
             <!-- не нужен в процессе компиляции, но
