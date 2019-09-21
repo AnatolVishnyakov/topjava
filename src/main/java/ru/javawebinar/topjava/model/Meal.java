@@ -4,12 +4,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class UserMeal {
+// Еда
+public class Meal {
     protected final LocalDateTime dateTime;
     protected final String description;
     protected final int calories;
 
-    public UserMeal(LocalDateTime dateTime, String description, int calories) {
+    public Meal(LocalDateTime dateTime, String description, int calories) {
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
