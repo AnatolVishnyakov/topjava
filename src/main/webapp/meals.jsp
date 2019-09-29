@@ -39,18 +39,15 @@
     </thead>
 
     <tbody>
-    <jsp:useBean id="meals" scope="request"
-                 type="java.util.List<ru.javawebinar.topjava.model.MealWithExceed>"/>
-    <c:forEach var="meal" items="${meals}">
-        <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealWithExceed"/>
+    <c:forEach items="${meals}" var="meal">
         <tr class="${meal.exceed ? 'exceeded' : 'normal'}">
             <td>
-                <%=DateTimeUtil.toString(meal.getDateTime())%>
+<%--                <%=DateTimeUtil.toString(meal.getDateTime())%>--%>
             </td>
             <td>${meal.description}</td>
             <td>${meal.calories}</td>
             <td>
-<%--                <a href="WEB-INF/jsp/editMeal.jsp">Редактировать</a>--%>
+                <a href="meals?action=update&id=${meal.id}">Редактировать</a>
             </td>
         </tr>
     </c:forEach>
