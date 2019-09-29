@@ -9,8 +9,8 @@
     <uri>http://topjava.javawebinar.ru/functions</uri>
 
     <function>
-        <name>format</name>
-        <function-class>ru.javawebinar.topjava.util.DateUtil</function-class>
-        <function-signature>java.lang.String format(java.time.LocalDateTime)</function-signature>
+        <name>toString</name>
+        <function-class>ru.javawebinar.topjava.util.DateTimeUtil</function-class>
+        <function-signature>java.lang.String toString(java.time.LocalDateTime)</function-signature>
     </function>
 </taglib>
