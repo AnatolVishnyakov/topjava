@@ -1,16 +1,30 @@
 package ru.javawebinar.topjava.repository;
 
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class InMemoryMealRepository implements MealRepository {
     private Map<Integer, Meal> repository = new HashMap<>();
+    private AtomicInteger counter = new AtomicInteger();
+
+    {
+        MealsUtil.MEAL_LIST.forEach(this::save);
+    }
 
     @Override
-    public void create(Meal meal) {
-        repository.put(meal.getId(), meal);
+    public Meal save(Meal meal) {
+        if (meal.isNew()) {
+            meal.setId(counter.incrementAndGet());
+            repository.put(meal.getId(), meal);
+            return meal;
+        }
+        // treat case: update, but absent in storage
+        return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
     }
 
     @Override
@@ -19,14 +33,12 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public void update(Meal meal) {
-        if (repository.containsKey(meal.getId())) {
-            repository.put(meal.getId(), meal);
-        }
+    public void delete(int id) {
+        repository.remove(id);
     }
 
     @Override
-    public void delete(Meal meal) {
-        repository.remove(meal.getId());
+    public Collection<Meal> getAll() {
+        return repository.values();
     }
 }

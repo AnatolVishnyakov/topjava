@@ -2,12 +2,14 @@ package ru.javawebinar.topjava.repository;
 
 import ru.javawebinar.topjava.model.Meal;
 
+import java.util.Collection;
+
 public interface MealRepository {
-    void create(Meal meal);
+    Meal save(Meal meal);
+
+    void delete(int id);
 
     Meal get(int id);
 
-    void update(Meal meal);
-
-    void delete(Meal meal);
+    Collection<Meal> getAll();
 }
