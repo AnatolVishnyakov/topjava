@@ -28,14 +28,14 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.debug("Start MealServlet [GET]");
+        String action = request.getParameter("action") == null
+                ? "getAll" : request.getParameter("action");
 
-        String action = request.getParameter("action");
-        logger.info("Action: " + action);
-        switch (action == null ? "getAll" : action) {
+        switch (action) {
             case "create":
             case "update":
-                Meal meal = "create".equals(action)
+                logger.info(action);
+                Meal meal = "Create".equals(action)
                         ? new Meal(LocalDateTime.now(), "", 1_000)
                         : repository.get(getId(request));
                 request.setAttribute("meal", meal);
@@ -45,6 +45,7 @@ public class MealServlet extends HttpServlet {
 
             case "delete":
                 int removeElement = getId(request);
+                logger.info("Delete {}", removeElement);
                 repository.delete(removeElement);
                 response.sendRedirect("meals");
                 break;
@@ -57,13 +58,10 @@ public class MealServlet extends HttpServlet {
                         .forward(request, response);
                 break;
         }
-
-        logger.debug("End MealServlet");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        logger.debug("Start MealServlet [POST]");
         request.setCharacterEncoding("UTF-8");
 
         String id = request.getParameter("id");
@@ -71,11 +69,9 @@ public class MealServlet extends HttpServlet {
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
                 Integer.parseInt(request.getParameter("calories")));
-
+        logger.info(meal.isNew() ? "Create {}" : "Update {}", meal);
         repository.save(meal);
         response.sendRedirect("meals");
-
-        logger.debug("End MealServlet [POST]");
     }
 
     private int getId(HttpServletRequest request) {
