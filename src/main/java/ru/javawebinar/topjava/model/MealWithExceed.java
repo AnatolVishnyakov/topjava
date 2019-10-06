@@ -1,31 +1,21 @@
 package ru.javawebinar.topjava.model;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicInteger;
 
 // Еда с превышением калорий
 public class MealWithExceed {
-    private static AtomicInteger counter = new AtomicInteger(0);
-    protected final int id;
-    protected final LocalDateTime dateTime;
-    protected final String description;
-    protected final int calories;
-    protected final boolean exceed; // превышение калорий
+    private Integer id;
+    private final LocalDateTime dateTime;
+    private final String description;
+    private final int calories;
+    private final boolean exceed; // превышение калорий
 
-    public MealWithExceed(Meal meal, boolean exceed) {
-        this.dateTime = meal.dateTime;
-        this.description = meal.description;
-        this.calories = meal.calories;
-        this.exceed = exceed;
-        this.id = counter.incrementAndGet();
-    }
-
-    public MealWithExceed(LocalDateTime dateTime, String description, int calories, boolean exceed) {
+    public MealWithExceed(Integer id, LocalDateTime dateTime, String description, int calories, boolean exceed) {
+        this.id = id;
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
         this.exceed = exceed;
-        this.id = counter.incrementAndGet();
     }
 
     public LocalDateTime getDateTime() {
@@ -44,14 +34,19 @@ public class MealWithExceed {
         return exceed;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     @Override
     public String toString() {
         return "MealWithExceed{" +
-                "dateTime=" + dateTime +
+                "id=" + id +
+                ", dateTime=" + dateTime +
                 ", description='" + description + '\'' +
                 ", calories=" + calories +
                 ", exceed=" + exceed +

@@ -7,6 +7,10 @@ import java.time.format.DateTimeFormatter;
 public class DateTimeUtil {
     private static final DateTimeFormatter DEFAULT_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+    public static LocalDateTime toDate(String date) {
+        return LocalDateTime.parse(date.replace('T', ' '), DEFAULT_DATE_FORMAT);
+    }
+
     public static String toString(LocalDateTime localDateTime) {
         return localDateTime == null
                 ? "" : localDateTime.format(DEFAULT_DATE_FORMAT);

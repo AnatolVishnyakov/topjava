@@ -6,31 +6,39 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class InMemoryMealRepository implements MealRepository {
-    private Map<Integer, Meal> meals = new HashMap<>();
+    private Map<Integer, Meal> repository = new HashMap<>();
+    private AtomicInteger counter = new AtomicInteger();
 
     {
-        MealsUtil.MEALS.forEach(this::create);
+        MealsUtil.MEAL_LIST.forEach(this::save);
     }
 
     @Override
-    public void create(Meal meal) {
-        meals.put(meal.getId(), meal);
-    }
-
-    @Override
-    public void delete(int id) {
-        meals.remove(id);
+    public Meal save(Meal meal) {
+        if (meal.isNew()) {
+            meal.setId(counter.incrementAndGet());
+            repository.put(meal.getId(), meal);
+            return meal;
+        }
+        // treat case: update, but absent in storage
+        return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
     }
 
     @Override
     public Meal get(int id) {
-        return meals.get(id);
+        return repository.get(id);
+    }
+
+    @Override
+    public void delete(int id) {
+        repository.remove(id);
     }
 
     @Override
     public Collection<Meal> getAll() {
-        return meals.values();
+        return repository.values();
     }
 }
