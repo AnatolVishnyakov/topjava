@@ -13,7 +13,7 @@ public class InMemoryMealRepository implements MealRepository {
     private AtomicInteger counter = new AtomicInteger();
 
     {
-        MealsUtil.MEAL_LIST.forEach(this::save);
+        MealsUtil.MEALS.forEach(this::save);
     }
 
     @Override
