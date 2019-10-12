@@ -11,12 +11,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
 public class MealsUtil {
-    public static final List<Meal> MEAL_LIST = Arrays.asList(
+    public static final List<Meal> MEALS = Arrays.asList(
             new Meal(LocalDateTime.of(2019, Month.MAY, 30, 10, 0), "Завтрак", 500),
             new Meal(LocalDateTime.of(2019, Month.MAY, 30, 13, 0), "Обед", 1000),
             new Meal(LocalDateTime.of(2019, Month.MAY, 30, 20, 0), "Ужин", 500),
@@ -27,14 +28,18 @@ public class MealsUtil {
     public static final int DEFAULT_CALORIES_PER_DAY = 2_000;
 
     public static List<MealWithExceed> getWithExceeded(Collection<Meal> mealList, int caloriesPerDay) {
-        return getFilteredWithExceeded(mealList, LocalTime.MIN, LocalTime.MAX, caloriesPerDay);
+        return getFilteredWithExceeded(mealList, caloriesPerDay, meal -> true);
+    }
+
+    public static List<MealWithExceed> getFilteredWithExceeded(List<Meal> meals, int caloriesPerDay, LocalTime startTime, LocalTime endTime) {
+        return getFilteredWithExceeded(meals, caloriesPerDay, meal -> DateTimeUtil.isBetween(meal.getTime(), startTime, endTime));
     }
 
     /**
      * Метод возвращает отфильтрованный по калориям
      * список еды.
      */
-    public static List<MealWithExceed> getFilteredWithExceeded(Collection<Meal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
+    public static List<MealWithExceed> getFilteredWithExceeded(Collection<Meal> meals, int caloriesPerDay, Predicate<Meal> filter) {
         Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
                 .collect(
                         Collectors.groupingBy(Meal::getDate, Collectors.summingInt(Meal::getCalories))
@@ -42,7 +47,7 @@ public class MealsUtil {
                 );
 
         return meals.stream()
-                .filter(meal -> DateTimeUtil.isBetween(meal.getTime(), startTime, endTime))
+                .filter(filter)
                 .map(meal -> createWithExceed(meal, caloriesSumByDate.get(meal.getDate()) > caloriesPerDay))
                 .collect(toList());
     }
