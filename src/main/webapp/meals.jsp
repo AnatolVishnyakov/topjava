@@ -38,9 +38,9 @@
 
         <tbody>
         <jsp:useBean id="meals" scope="request"
-                     type="java.util.List<ru.javawebinar.topjava.model.MealWithExceed>"/>
+                     type="java.util.List<ru.javawebinar.topjava.to.MealWithExceed>"/>
         <c:forEach var="meal" items="${meals}">
-            <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealWithExceed"/>
+            <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealWithExceed"/>
             <tr class="${meal.exceed ? 'exceeded' : 'normal'}">
                 <td>
 <%--                    <%=DateTimeUtil.toString(meal.getDateTime())%>--%>
