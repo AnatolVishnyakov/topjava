@@ -35,7 +35,7 @@ public class MealServlet extends HttpServlet {
             case "create":
             case "update":
                 logger.info(action);
-                Meal meal = "Create".equals(action)
+                Meal meal = "create".equals(action)
                         ? new Meal(LocalDateTime.now(), "", 1_000)
                         : repository.get(getId(request));
                 request.setAttribute("meal", meal);
