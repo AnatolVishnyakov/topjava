@@ -41,6 +41,10 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public List<Meal> getAll(int userId) {
-        return repository.getAll(userId);
+        List<Meal> meals = repository.getAll(userId);
+        if (meals.isEmpty()) {
+            throw new NotFoundException("Meal for userId: " + userId + " is empty");
+        }
+        return meals;
     }
 }
