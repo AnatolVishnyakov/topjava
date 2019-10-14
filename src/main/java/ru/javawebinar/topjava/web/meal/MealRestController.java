@@ -4,11 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
-import ru.javawebinar.topjava.to.MealWithExceed;
-import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class MealRestController {
@@ -31,10 +28,7 @@ public class MealRestController {
         service.update(userId, meal);
     }
 
-    public List<MealWithExceed> getAll(int userId) {
-        List<Meal> meals = service.getAll(userId);
-        return meals.stream()
-                .map(meal -> MealsUtil.createWithExceed(meal, true))
-                .collect(Collectors.toList());
+    public List<Meal> getAll(int userId) {
+        return service.getAll(userId);
     }
 }
