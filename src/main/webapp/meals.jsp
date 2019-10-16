@@ -1,4 +1,3 @@
-<%@ page import="ru.javawebinar.topjava.util.DateTimeUtil" %>
 <%--
   Date: 21.09.2019
 --%>
@@ -11,8 +10,13 @@
 <head>
     <title>User meals</title>
     <style type="text/css">
-        .exceeded { color: red; }
-        .normal { color: green; }
+        .exceeded {
+            color: red;
+        }
+
+        .normal {
+            color: green;
+        }
     </style>
 </head>
 <body>
@@ -22,6 +26,33 @@
     </h2>
 
     <h3>Meal List</h3>
+
+    <form id="filter">
+        <div class="row">
+            <div>
+                <label for="startDate">От даты</label>
+                <input name="startDate" id="startDate">
+            </div>
+            <div>
+                <label for="endDate">До даты</label>
+                <input name="endDate" id="endDate">
+            </div>
+            <div>
+                <label for="startTime">От времени</label>
+                <input name="startTime" id="startTime">
+            </div>
+            <div>
+                <label for="endTime">До времени</label>
+                <input name="endTime" id="endTime">
+            </div>
+        </div>
+    </form>
+
+    <div>
+        <button>Отменить</button>
+        <button>Отфильтровать</button>
+    </div>
+
     <a href="meals?action=create">Add Meal</a>
     <hr>
 
@@ -43,8 +74,8 @@
             <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealWithExceed"/>
             <tr class="${meal.exceed ? 'exceeded' : 'normal'}">
                 <td>
-<%--                    <%=DateTimeUtil.toString(meal.getDateTime())%>--%>
-                    ${fn:formatDateTime(meal.dateTime)}
+                        <%--                    <%=DateTimeUtil.toString(meal.getDateTime())%>--%>
+                        ${fn:formatDateTime(meal.dateTime)}
                 </td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
