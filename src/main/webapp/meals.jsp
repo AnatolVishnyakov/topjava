@@ -46,13 +46,12 @@
                 <input type="time" name="endTime" id="endTime">
             </div>
         </div>
-    </form>
 
-    <div>
-        <button>Отменить</button>
-        <button>Отфильтровать</button>
-    </div>
-    <br>
+        <div>
+            <button type="button" onclick="window.history.back()">Отменить</button>
+            <button type="submit">Отфильтровать</button>
+        </div>
+    </form>
 
     <a href="meals?action=create">Add Meal</a>
     <hr>
