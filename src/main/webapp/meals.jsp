@@ -31,19 +31,19 @@
         <div class="row">
             <div>
                 <label for="startDate">От даты</label>
-                <input name="startDate" id="startDate">
+                <input type="date" name="startDate" id="startDate">
             </div>
             <div>
                 <label for="endDate">До даты</label>
-                <input name="endDate" id="endDate">
+                <input type="date" name="endDate" id="endDate">
             </div>
             <div>
                 <label for="startTime">От времени</label>
-                <input name="startTime" id="startTime">
+                <input type="time" name="startTime" id="startTime">
             </div>
             <div>
                 <label for="endTime">До времени</label>
-                <input name="endTime" id="endTime">
+                <input type="time" name="endTime" id="endTime">
             </div>
         </div>
     </form>
@@ -52,6 +52,7 @@
         <button>Отменить</button>
         <button>Отфильтровать</button>
     </div>
+    <br>
 
     <a href="meals?action=create">Add Meal</a>
     <hr>
