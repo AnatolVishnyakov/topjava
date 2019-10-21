@@ -3,19 +3,19 @@ package ru.javawebinar.topjava.to;
 import java.time.LocalDateTime;
 
 // Еда с превышением калорий
-public class MealWithExceed {
+public class MealTO {
     private Integer id;
     private final LocalDateTime dateTime;
     private final String description;
     private final int calories;
-    private final boolean exceed; // превышение калорий
+    private final boolean excess; // превышение калорий
 
-    public MealWithExceed(Integer id, LocalDateTime dateTime, String description, int calories, boolean exceed) {
+    public MealTO(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
         this.id = id;
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
-        this.exceed = exceed;
+        this.excess = excess;
     }
 
     public LocalDateTime getDateTime() {
@@ -30,8 +30,8 @@ public class MealWithExceed {
         return calories;
     }
 
-    public boolean isExceed() {
-        return exceed;
+    public boolean isExcess() {
+        return excess;
     }
 
     public Integer getId() {
@@ -49,7 +49,7 @@ public class MealWithExceed {
                 ", dateTime=" + dateTime +
                 ", description='" + description + '\'' +
                 ", calories=" + calories +
-                ", exceed=" + exceed +
+                ", excess=" + excess +
                 '}';
     }
 }

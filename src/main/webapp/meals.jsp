@@ -10,7 +10,7 @@
 <head>
     <title>User meals</title>
     <style type="text/css">
-        .exceeded {
+        .excess {
             color: red;
         }
 
@@ -27,8 +27,9 @@
 
     <h3>Meal List</h3>
 
-    <form id="filter">
+    <form id="filter" method="get">
         <div class="row">
+            <input type="hidden" name="filter">
             <div>
                 <label for="startDate">От даты</label>
                 <input type="date" name="startDate" id="startDate">
@@ -69,10 +70,10 @@
 
         <tbody>
         <jsp:useBean id="meals" scope="request"
-                     type="java.util.List<ru.javawebinar.topjava.to.MealWithExceed>"/>
+                     type="java.util.List<ru.javawebinar.topjava.to.MealTO>"/>
         <c:forEach var="meal" items="${meals}">
-            <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealWithExceed"/>
-            <tr class="${meal.exceed ? 'exceeded' : 'normal'}">
+            <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealTO"/>
+            <tr class="${meal.excess ? 'excess' : 'normal'}">
                 <td>
                         <%--                    <%=DateTimeUtil.toString(meal.getDateTime())%>--%>
                         ${fn:formatDateTime(meal.dateTime)}

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
@@ -14,8 +15,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 // Сервлет по отображению списка еды
 public class MealServlet extends HttpServlet {
@@ -32,8 +36,9 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action") == null
-                ? "getAll" : request.getParameter("action");
+        String action = request.getParameter("filter") != null
+                ? "filter" : request.getParameter("action") == null
+                    ? "getAll" : request.getParameter("action");
 
         switch (action) {
             case "create":
@@ -54,10 +59,32 @@ public class MealServlet extends HttpServlet {
                 response.sendRedirect("meals");
                 break;
 
+            case "filter":
+                String sd = request.getParameter("startDate");
+                LocalDate startDate = sd.isEmpty()
+                    ? LocalDate.of(1980, 1, 1)
+                    : DateTimeUtil.toDate(sd).toLocalDate();
+
+                String ed = request.getParameter("endDate");
+                LocalDate endDate = ed.isEmpty()
+                    ? LocalDate.now()
+                    : DateTimeUtil.toDate(ed).toLocalDate();
+
+                if (!sd.isEmpty() || !ed.isEmpty()) {
+                    List<Meal> meals = controller.getAll(SecurityUtil.authUserId())
+                            .stream().filter(meal1 -> DateTimeUtil.isBetween(meal1.getDate(), startDate, endDate))
+                            .collect(Collectors.toList());
+                    request.setAttribute("meals",
+                            MealsUtil.getWithExcess(meals, MealsUtil.DEFAULT_CALORIES_PER_DAY));
+                    request.getRequestDispatcher("/meals.jsp")
+                            .forward(request, response);
+                    break;
+                }
+
             case "getAll":
             default:
                 request.setAttribute("meals",
-                        MealsUtil.getWithExceeded(controller.getAll(SecurityUtil.adminUser().getId()), MealsUtil.DEFAULT_CALORIES_PER_DAY));
+                        MealsUtil.getWithExcess(controller.getAll(SecurityUtil.adminUser().getId()), MealsUtil.DEFAULT_CALORIES_PER_DAY));
                 request.getRequestDispatcher("/meals.jsp")
                         .forward(request, response);
                 break;
