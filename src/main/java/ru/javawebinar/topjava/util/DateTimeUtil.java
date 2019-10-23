@@ -6,6 +6,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class DateTimeUtil {
+    public static final LocalDate MIN_DATE = LocalDate.of(1, 1, 1);
+    public static final LocalDate MAX_DATE = LocalDate.of(3000, 1, 1);
     private static final DateTimeFormatter DEFAULT_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public static LocalDateTime toDate(String date) {
