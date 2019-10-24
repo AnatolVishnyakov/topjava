@@ -6,12 +6,19 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
 public class MealServiceImpl implements MealService {
+    private final MealRepository repository;
+
     @Autowired
-    private MealRepository repository;
+    public MealServiceImpl(MealRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public Meal create(int userId, Meal meal) {
@@ -20,31 +27,26 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public void delete(int userId, int id) throws NotFoundException {
-        if (repository.delete(userId, id) == null) {
-            throw new NotFoundException("Not found meal id: " + id);
-        }
+        checkNotFoundWithId(repository.delete(userId, id), id);
     }
 
     @Override
     public Meal get(int userId, int id) throws NotFoundException {
-        Meal meal = repository.get(userId, id);
-        if (meal == null) {
-            throw new NotFoundException("Not found meal id: " + id);
-        }
-        return meal;
+        return checkNotFoundWithId(repository.get(userId, id), id);
+    }
+
+    @Override
+    public List<Meal> getBetweenDateTimes(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
+        return repository.getBetween(startDateTime, endDateTime, userId);
     }
 
     @Override
     public void update(int userId, Meal meal) {
-        repository.save(userId, meal);
+        checkNotFoundWithId(repository.save(userId, meal), meal.getId());
     }
 
     @Override
     public List<Meal> getAll(int userId) {
-        List<Meal> meals = repository.getAll(userId);
-        if (meals.isEmpty()) {
-            throw new NotFoundException("Meal for userId: " + userId + " is empty");
-        }
-        return meals;
+        return repository.getAll(userId);
     }
 }
