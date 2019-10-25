@@ -5,7 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.util.DateTimeUtil;
+import ru.javawebinar.topjava.repository.InMemoryMealRepository;
+import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
@@ -15,78 +16,61 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 // Сервлет по отображению списка еды
 public class MealServlet extends HttpServlet {
     private static final Logger logger = LoggerFactory.getLogger(MealServlet.class);
-    private MealRestController controller;
+    private MealRepository repository;
+    private ConfigurableApplicationContext springContext;
+    private MealRestController mealController;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        try (ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("spring/spring-app.xml")) {
-            controller = context.getBean(MealRestController.class);
-        }
+        repository = new InMemoryMealRepository();
+        springContext = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+        mealController = springContext.getBean(MealRestController.class);
+    }
+
+    @Override
+    public void destroy() {
+        springContext.close();
+        super.destroy();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("filter") != null
                 ? "filter" : request.getParameter("action") == null
-                    ? "getAll" : request.getParameter("action");
+                ? "getAll" : request.getParameter("action");
 
-        switch (action) {
-            case "create":
-            case "update":
-                logger.info(action);
-                Meal meal = "create".equals(action)
-                        ? new Meal(LocalDateTime.now(), "", 1_000)
-                        : controller.get(SecurityUtil.adminUser().getId(), getId(request));
-                request.setAttribute("meal", meal);
-                request.getRequestDispatcher("/edit.jsp")
-                        .forward(request, response);
-                break;
-
+        switch (action == null ? "all" : action) {
             case "delete":
-                int removeElement = getId(request);
-                logger.info("Delete {}", removeElement);
-                controller.delete(SecurityUtil.adminUser().getId(), removeElement);
+                int id = getId(request);
+                logger.info("delete {}", id);
+                repository.delete(id, SecurityUtil.authUserId());
+                mealController.delete(id);
                 response.sendRedirect("meals");
                 break;
-
-            case "filter":
-                String sd = request.getParameter("startDate");
-                LocalDate startDate = sd.isEmpty()
-                    ? LocalDate.of(1980, 1, 1)
-                    : DateTimeUtil.toDate(sd).toLocalDate();
-
-                String ed = request.getParameter("endDate");
-                LocalDate endDate = ed.isEmpty()
-                    ? LocalDate.now()
-                    : DateTimeUtil.toDate(ed).toLocalDate();
-
-                if (!sd.isEmpty() || !ed.isEmpty()) {
-                    List<Meal> meals = controller.getAll(SecurityUtil.authUserId())
-                            .stream().filter(meal1 -> DateTimeUtil.isBetween(meal1.getDate(), startDate, endDate))
-                            .collect(Collectors.toList());
-                    request.setAttribute("meals",
-                            MealsUtil.getWithExcess(meals, MealsUtil.DEFAULT_CALORIES_PER_DAY));
-                    request.getRequestDispatcher("/meals.jsp")
-                            .forward(request, response);
-                    break;
-                }
-
-            case "getAll":
+            case "create":
+            case "update":
+                final Meal meal = "create".equals(action) ?
+                        new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
+                        repository.get(getId(request), SecurityUtil.authUserId());
+                mealController.get(getId(request));
+                request.setAttribute("meal", meal);
+                request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
+                break;
+            case "all":
             default:
+                logger.info("getAll");
                 request.setAttribute("meals",
-                        MealsUtil.getWithExcess(controller.getAll(SecurityUtil.adminUser().getId()), MealsUtil.DEFAULT_CALORIES_PER_DAY));
-                request.getRequestDispatcher("/meals.jsp")
-                        .forward(request, response);
+                        MealsUtil.getWithExcess(repository.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY));
+                request.setAttribute("meals", mealController.getAll());
+                request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }
     }
@@ -94,14 +78,20 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
-
         String id = request.getParameter("id");
+
         Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
                 Integer.parseInt(request.getParameter("calories")));
+
         logger.info(meal.isNew() ? "Create {}" : "Update {}", meal);
-        controller.create(SecurityUtil.adminUser().getId(), meal);
+        repository.save(SecurityUtil.authUserId(), meal);
+        if (request.getParameter("id").isEmpty()) {
+            mealController.create(meal);
+        } else {
+            mealController.update(meal, getId(request));
+        }
         response.sendRedirect("meals");
     }
 
