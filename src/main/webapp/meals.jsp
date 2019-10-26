@@ -70,9 +70,9 @@
 
         <tbody>
         <jsp:useBean id="meals" scope="request"
-                     type="java.util.List<ru.javawebinar.topjava.to.MealTO>"/>
+                     type="java.util.List<ru.javawebinar.topjava.to.MealTo>"/>
         <c:forEach var="meal" items="${meals}">
-            <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealTO"/>
+            <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealTo"/>
             <tr class="${meal.excess ? 'excess' : 'normal'}">
                 <td>
                         <%--                    <%=DateTimeUtil.toString(meal.getDateTime())%>--%>

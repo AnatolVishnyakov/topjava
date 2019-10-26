@@ -3,14 +3,14 @@ package ru.javawebinar.topjava.to;
 import java.time.LocalDateTime;
 
 // Еда с превышением калорий
-public class MealTO {
+public class MealTo {
     private Integer id;
     private final LocalDateTime dateTime;
     private final String description;
     private final int calories;
     private final boolean excess; // превышение калорий
 
-    public MealTO(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
+    public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
         this.id = id;
         this.dateTime = dateTime;
         this.description = description;
