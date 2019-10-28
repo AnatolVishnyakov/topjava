@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.repository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import ru.javawebinar.topjava.model.Meal;
@@ -7,8 +9,13 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.Util;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -16,11 +23,22 @@ import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryMealRepositoryImpl implements MealRepository {
+    private static final Logger logger = LoggerFactory.getLogger(InMemoryMealRepositoryImpl.class);
     private Map<Integer, Map<Integer, Meal>> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger();
 
     {
         MealsUtil.MEALS.forEach(meal -> save(SecurityUtil.authUserId(), meal));
+    }
+
+    @PostConstruct
+    public void postConstruct() {
+        logger.info("+++ PostConstruct");
+    }
+
+    @PreDestroy
+    public void preDestroy() {
+        logger.info("+++ PreDestroy");
     }
 
     @Override
@@ -69,8 +87,8 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
         Map<Integer, Meal> meals = repository.get(userId);
         return CollectionUtils.isEmpty(meals) ? Collections.emptyList() :
                 meals.values().stream()
-                    .filter(filter)
-                    .sorted(Comparator.comparing(Meal::getDateTime).reversed())
-                    .collect(Collectors.toList());
-        }
+                        .filter(filter)
+                        .sorted(Comparator.comparing(Meal::getDateTime).reversed())
+                        .collect(Collectors.toList());
+    }
 }
