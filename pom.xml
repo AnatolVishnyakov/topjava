@@ -22,6 +22,7 @@
 
         <!--    Tests  -->
         <junit.version>4.12</junit.version>
+        <spring.version>5.1.9.RELEASE</spring.version>
     </properties>
 
     <build>
@@ -97,7 +98,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>5.1.9.RELEASE</version>
+            <version>${spring.version}</version>
         </dependency>
 
         <!--Test-->
@@ -105,6 +106,12 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
