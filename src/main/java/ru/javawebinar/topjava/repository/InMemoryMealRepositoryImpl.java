@@ -55,17 +55,17 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public Meal get(int userId, int id) {
+    public Meal get(int id, int userId) {
         return repository
                 .getOrDefault(userId, Collections.emptyMap())
                 .getOrDefault(id, null);
     }
 
     @Override
-    public Meal delete(int userId, int id) {
-        return repository
-                .getOrDefault(userId, Collections.emptyMap())
-                .remove(id);
+    public boolean delete(int id, int userId) {
+        Map<Integer, Meal> meals = repository.get(userId);
+        return meals != null &&
+                meals.remove(id) != null;
     }
 
     @Override

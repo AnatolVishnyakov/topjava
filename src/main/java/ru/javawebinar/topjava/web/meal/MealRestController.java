@@ -31,13 +31,13 @@ public class MealRestController {
     public Meal get(int id) {
         int userId = SecurityUtil.authUserId();
         log.info("get meal {} for user {}", id, userId);
-        return service.get(id, userId);
+        return service.get(userId, id);
     }
 
     public void delete(int id) {
         int userId = SecurityUtil.authUserId();
         log.info("delete meal {} for user {}", id, userId);
-        service.delete(id, userId);
+        service.delete(userId, id);
     }
 
     public List<MealTo> getAll() {
