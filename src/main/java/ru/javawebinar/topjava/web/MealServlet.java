@@ -36,7 +36,7 @@ public class MealServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         repository = new InMemoryMealRepositoryImpl();
-        springContext = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+        springContext = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/spring-db.xml");
         mealController = springContext.getBean(MealRestController.class);
     }
 
