@@ -9,6 +9,7 @@ public class Meal extends AbstractBaseEntity {
     private LocalDateTime dateTime;
     private String description;
     private int calories;
+    private int userId;
 
     public Meal() {}
 
@@ -65,6 +66,14 @@ public class Meal extends AbstractBaseEntity {
 
     public boolean isNew() {
         return id == null;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     @Override
