@@ -18,7 +18,7 @@ import java.util.List;
 
 public class SpringMain {
     public static void main(String[] args) {
-        ApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/spring-db.xml");
+        ApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/inmemory.xml");
         System.out.println("Bean definition names: " + Arrays.toString(appCtx.getBeanDefinitionNames()));
         AdminRestController adminUserController = appCtx.getBean(AdminRestController.class);
         MealRestController mealRestController = appCtx.getBean(MealRestController.class);
