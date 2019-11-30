@@ -31,7 +31,7 @@ public class JdbcMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public Meal save(int userId, Meal meal) {
+    public Meal save(Meal meal, int userId) {
         MapSqlParameterSource map = new MapSqlParameterSource()
                 .addValue("id", meal.getId())
                 .addValue("description", meal.getDescription())
@@ -53,12 +53,12 @@ public class JdbcMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public boolean delete(int id, int userId) {
+    public boolean delete(int userId, int id) {
         return jdbcTemplate.update("DELETE FROM meals WHERE id = ? AND user_id = ?", id, userId) != 0;
     }
 
     @Override
-    public Meal get(int id, int userId) {
+    public Meal get(int userId, int id) {
         List<Meal> meals = jdbcTemplate.query("SELECT * FROM meals WHERE id = ? AND user_id = ?", ROW_MAPPER, id, userId);
         return DataAccessUtils.singleResult(meals);
     }

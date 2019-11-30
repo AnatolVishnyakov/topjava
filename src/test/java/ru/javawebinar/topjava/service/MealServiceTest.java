@@ -50,6 +50,7 @@ public class MealServiceTest {
     public void create() throws Exception {
         Meal created = getCreated();
         service.create(USER_ID, created);
+        created.setUserId(USER_ID);
         assertMatch(service.getAll(USER_ID), created, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1);
     }
 
@@ -67,6 +68,7 @@ public class MealServiceTest {
     @Test
     public void update() throws Exception {
         Meal updated = getUpdated();
+        updated.setUserId(USER_ID);
         service.update(USER_ID, updated);
         assertMatch(service.get(MEAL1_ID, USER_ID), updated);
     }

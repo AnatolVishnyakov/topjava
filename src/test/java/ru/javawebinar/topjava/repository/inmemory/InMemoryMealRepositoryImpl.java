@@ -6,9 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.Util;
-import ru.javawebinar.topjava.web.SecurityUtil;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -25,10 +23,6 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     private Map<Integer, Map<Integer, Meal>> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger();
 
-    {
-        MealsUtil.MEALS.forEach(meal -> save(SecurityUtil.authUserId(), meal));
-    }
-
     @PostConstruct
     public void postConstruct() {
         logger.info("+++ PostConstruct");
@@ -40,28 +34,27 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public Meal save(int userId, Meal meal) {
+    public Meal save(Meal meal, int userId) {
         Objects.requireNonNull(meal, "meal must not be null");
-        Map<Integer, Meal> meals = repository.getOrDefault(userId, new ConcurrentHashMap<>());
+        Map<Integer, Meal> meals = repository.computeIfAbsent(userId, ConcurrentHashMap::new);
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
             meals.put(meal.getId(), meal);
-            repository.put(userId, meals);
             return meal;
         }
-//        // treat case: update, but absent in storage
         return meals.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
     }
 
+
     @Override
-    public Meal get(int id, int userId) {
+    public Meal get(int userId, int id) {
         return repository
                 .getOrDefault(userId, Collections.emptyMap())
                 .getOrDefault(id, null);
     }
 
     @Override
-    public boolean delete(int id, int userId) {
+    public boolean delete(int userId, int id) {
         Map<Integer, Meal> meals = repository.get(userId);
         return meals != null &&
                 meals.remove(id) != null;
