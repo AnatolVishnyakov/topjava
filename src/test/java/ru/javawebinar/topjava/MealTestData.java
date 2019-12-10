@@ -27,7 +27,7 @@ public class MealTestData {
     public static final List<Meal> MEALS = Arrays.asList(MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1);
 
     static {
-        MEALS.forEach(meal -> meal.setUserId(USER_ID));
+        MEALS.forEach(meal -> meal.setUser(UserTestData.USER));
     }
 
     public static Meal getCreated() {
@@ -39,7 +39,7 @@ public class MealTestData {
     }
 
     public static void assertMatch(Meal actual, Meal expected) {
-        assertThat(actual).isEqualToComparingFieldByField(expected);
+        assertThat(actual).isEqualToIgnoringGivenFields(expected, "user");
     }
 
     public static void assertMatch(Iterable<Meal> actual, Meal... expected) {
@@ -47,6 +47,6 @@ public class MealTestData {
     }
 
     public static void assertMatch(Iterable<Meal> actual, Iterable<Meal> expected) {
-        assertThat(actual).usingFieldByFieldElementComparator().isEqualTo(expected);
+        assertThat(actual).usingElementComparatorIgnoringFields("user").isEqualTo(expected);
     }
 }

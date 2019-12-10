@@ -36,55 +36,53 @@ public class MealServiceTest {
     private MealService service;
 
     @Test
-    public void delete() throws Exception {
+    public void delete() {
         service.delete(MEAL1_ID, USER_ID);
         assertMatch(service.getAll(USER_ID), MEAL6, MEAL5, MEAL4, MEAL3, MEAL2);
     }
 
     @Test(expected = NotFoundException.class)
-    public void deleteNotFound() throws Exception {
+    public void deleteNotFound() {
         service.delete(MEAL1_ID, 1);
     }
 
     @Test
-    public void create() throws Exception {
+    public void create() {
         Meal created = getCreated();
         service.create(USER_ID, created);
-        created.setUserId(USER_ID);
         assertMatch(service.getAll(USER_ID), created, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1);
     }
 
     @Test
-    public void get() throws Exception {
+    public void get() {
         Meal actual = service.get(ADMIN_MEAL_ID, ADMIN_ID);
         assertMatch(actual, ADMIN_MEAL1);
     }
 
     @Test(expected = NotFoundException.class)
-    public void getNotFound() throws Exception {
+    public void getNotFound() {
         service.get(MEAL1_ID, ADMIN_ID);
     }
 
     @Test
-    public void update() throws Exception {
+    public void update() {
         Meal updated = getUpdated();
-        updated.setUserId(USER_ID);
         service.update(USER_ID, updated);
         assertMatch(service.get(MEAL1_ID, USER_ID), updated);
     }
 
     @Test(expected = NotFoundException.class)
-    public void updateNotFound() throws Exception {
+    public void updateNotFound() {
         service.update(ADMIN_ID, MEAL1);
     }
 
     @Test
-    public void getAll() throws Exception {
+    public void getAll() {
         assertMatch(service.getAll(USER_ID), MEALS);
     }
 
     @Test
-    public void getBetween() throws Exception {
+    public void getBetween() {
         assertMatch(service.getBetweenDates(
                 LocalDate.of(2015, Month.MAY, 30),
                 LocalDate.of(2015, Month.MAY, 30), USER_ID), MEAL3, MEAL2, MEAL1);
