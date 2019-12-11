@@ -27,6 +27,7 @@ public class JpaUserRepositoryImpl implements UserRepository {
     private EntityManager em;
 
     @Override
+    @Transactional
     public User save(User user) {
         if (user.isNew()) {
             em.persist(user);
@@ -42,6 +43,7 @@ public class JpaUserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    @Transactional
     public boolean delete(int id) {
 //        Получение легковесного Proxy объекта без связей
 //        User ref = em.getReference(User.class, id);
