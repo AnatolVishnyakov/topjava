@@ -4,7 +4,7 @@ import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.rules.TestWatcher;
+import org.junit.rules.Stopwatch;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -20,10 +20,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
 
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
@@ -44,30 +41,19 @@ public class MealServiceTest {
         SLF4JBridgeHandler.install();
     }
 
-    private static List<String> testReport = new ArrayList<>();
+    private static StringBuilder results = new StringBuilder();
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Rule
-    public TestWatcher watcher = new TestWatcher() {
-        private long startTime;
-
+    // http://stackoverflow.com/questions/14892125/what-is-the-best-practice-to-determine-the-execution-time-of-the-bussiness-relev
+    public Stopwatch stopwatch = new Stopwatch() {
         @Override
-        protected void starting(Description description) {
-            super.starting(description);
-            startTime = System.currentTimeMillis();
-        }
-
-        @Override
-        protected void finished(Description description) {
-            super.finished(description);
-            long finishTime = System.currentTimeMillis() - startTime;
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(finishTime);
-            String message = String.format("Method %s time running for %d ms", description.getMethodName(), calendar.get(Calendar.MILLISECOND));
-            logger.info(message);
-            testReport.add(message);
+        protected void finished(long nanos, Description description) {
+            String result = String.format("\n%-25s %7d", description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
+            results.append(result);
+            logger.info(result + " ms\n");
         }
     };
 
@@ -75,10 +61,12 @@ public class MealServiceTest {
     private MealService service;
 
     @AfterClass
-    public static void report() {
-        String result = testReport.stream()
-                .collect(Collectors.joining("\n", "\n=== Report timing tests ===\n", ""));
-        logger.info(result);
+    public static void printResult() {
+        logger.info("\n---------------------------------" +
+                "\nTest                 Duration, ms" +
+                "\n---------------------------------" +
+                results +
+                "\n---------------------------------");
     }
 
     @Test
