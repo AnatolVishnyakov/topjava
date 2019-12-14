@@ -23,6 +23,7 @@
         <!-- Tests  -->
         <junit.version>4.12</junit.version>
 
+        <spring-data-jpa.version>2.1.2.RELEASE</spring-data-jpa.version>
         <spring.version>5.1.9.RELEASE</spring.version>
         <tomcat.version>9.0.12</tomcat.version>
         <!-- Hibernate -->
@@ -94,9 +95,9 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>${spring.version}</version>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>${spring-data-jpa.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hsqldb</groupId>
@@ -152,7 +153,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <!--Test-->
@@ -165,7 +165,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -208,6 +207,19 @@
         </profile>
     </profiles>
 
+    <!--  Если в какой то библиотеке транзитивно подтягиваются
+          одни и теже зависимости разных версий,
+          какую версию подтягивать в проект указываем через
+          dependencyManagement  -->
     <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${spring.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
     </dependencyManagement>
 </project>
