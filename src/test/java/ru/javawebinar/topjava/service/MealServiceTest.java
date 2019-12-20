@@ -88,7 +88,7 @@ public class MealServiceTest {
     @Test
     public void create() {
         Meal created = getCreated();
-        service.create(USER_ID, created);
+        service.create(created, USER_ID);
         assertMatch(service.getAll(USER_ID), created, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1);
     }
 

@@ -51,7 +51,7 @@ public class MealRestController {
         int userId = SecurityUtil.authUserId();
         checkNew(meal);
         log.info("create {} for user {}", meal, userId);
-        return service.create(userId, meal);
+        return service.create(meal, userId);
     }
 
     public void update(Meal meal, int id) {
