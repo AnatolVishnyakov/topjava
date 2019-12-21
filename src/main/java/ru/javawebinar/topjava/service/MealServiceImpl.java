@@ -28,12 +28,12 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public void delete(int id, int userId) throws NotFoundException {
-        checkNotFoundWithId(repository.delete(userId, id), id);
+        checkNotFoundWithId(repository.delete(id, userId), id);
     }
 
     @Override
     public Meal get(int id, int userId) throws NotFoundException {
-        return checkNotFoundWithId(repository.get(userId, id), id);
+        return checkNotFoundWithId(repository.get(id, userId), id);
     }
 
     @Override

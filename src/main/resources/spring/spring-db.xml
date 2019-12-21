@@ -51,11 +51,11 @@
 
         <bean id="transactionManager"
               class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-            <property name="dataSource" ref="dataSource" />
+            <property name="dataSource" ref="dataSource"/>
         </bean>
     </beans>
 
-    <beans profile="jpa,data-jpa">
+    <beans profile="jpa,datajpa">
         <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
               p:dataSource-ref="dataSource"
               p:packagesToScan="ru.javawebinar.**.model">
@@ -86,7 +86,7 @@
         <context:component-scan base-package="ru.javawebinar.**.repository.jpa"/>
     </beans>
 
-    <beans profile="data-jpa">
+    <beans profile="datajpa">
         <context:component-scan base-package="ru.javawebinar.**.repository.datajpa"/>
         <jpa:repositories base-package="ru.javawebinar.**.repository.datajpa"/>
     </beans>

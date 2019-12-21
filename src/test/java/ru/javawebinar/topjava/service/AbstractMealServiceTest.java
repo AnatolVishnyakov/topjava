@@ -1,26 +1,77 @@
 package ru.javawebinar.topjava.service;
 
-import org.slf4j.bridge.SLF4JBridgeHandler;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import ru.javawebinar.topjava.ActiveDbProfileResolver;
+import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.util.exception.NotFoundException;
 
-@SpringJUnitConfig(locations = {
-        "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-db.xml"
-})
-@ActiveProfiles(resolver = ActiveDbProfileResolver.class)
-@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-public abstract class AbstractMealServiceTest {
+import java.time.LocalDate;
+import java.time.Month;
+
+import static ru.javawebinar.topjava.MealTestData.*;
+import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
+import static ru.javawebinar.topjava.UserTestData.USER_ID;
+
+public abstract class AbstractMealServiceTest extends AbstractServiceTest {
     @Autowired
-    private Environment env;
+    private MealService service;
 
-    static {
-        // needed only for java.util.logging (postgres driver)
-        SLF4JBridgeHandler.install();
+    @Test
+    public void delete() {
+        service.delete(MEAL1_ID, USER_ID);
+        assertMatch(service.getAll(USER_ID), MEAL6, MEAL5, MEAL4, MEAL3, MEAL2);
+    }
+
+    @Test
+    public void deleteNotFound() {
+        thrown.expect(NotFoundException.class);
+        thrown.expectMessage("Not found entity with id=" + MEAL1_ID);
+        service.delete(MEAL1_ID, 1);
+    }
+
+    @Test
+    public void create() {
+        Meal created = getCreated();
+        service.create(created, USER_ID);
+        assertMatch(service.getAll(USER_ID), created, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1);
+    }
+
+    @Test
+    public void get() {
+        Meal actual = service.get(ADMIN_MEAL_ID, ADMIN_ID);
+        assertMatch(actual, ADMIN_MEAL1);
+    }
+
+    @Test
+    public void getNotFound() {
+        thrown.expect(NotFoundException.class);
+        thrown.expectMessage("Not found entity with id=" + MEAL1_ID);
+        service.get(MEAL1_ID, ADMIN_ID);
+    }
+
+    @Test
+    public void update() {
+        Meal updated = getUpdated();
+        service.update(USER_ID, updated);
+        assertMatch(service.get(MEAL1_ID, USER_ID), updated);
+    }
+
+    @Test
+    public void updateNotFound() {
+        thrown.expect(NotFoundException.class);
+        thrown.expectMessage("Not found entity with id=" + MEAL1_ID);
+        service.update(ADMIN_ID, MEAL1);
+    }
+
+    @Test
+    public void getAll() {
+        assertMatch(service.getAll(USER_ID), MEALS);
+    }
+
+    @Test
+    public void getBetween() {
+        assertMatch(service.getBetweenDates(
+                LocalDate.of(2015, Month.MAY, 30),
+                LocalDate.of(2015, Month.MAY, 30), USER_ID), MEAL3, MEAL2, MEAL1);
     }
 }
