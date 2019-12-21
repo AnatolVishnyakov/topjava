@@ -24,4 +24,6 @@ public interface MealService {
     default List<Meal> getBetweenDates(LocalDate startDate, LocalDate endDate, int userId) {
         return getBetweenDateTimes(LocalDateTime.of(startDate, LocalTime.MIN), LocalDateTime.of(endDate, LocalTime.MAX), userId);
     }
+
+    Meal getWithUser(int id, int userId);
 }
