@@ -8,7 +8,7 @@
 
 <html>
 <head>
-    <title>User meals</title>
+    <title>Calories management</title>
     <style type="text/css">
         .excess {
             color: red;
@@ -22,10 +22,10 @@
 <body>
 <section>
     <h2>
-        <a href="index.html">Home</a>
+        <a href="index.jsp">Home</a>
     </h2>
 
-    <h3>Meal List</h3>
+    <h3>Meals</h3>
 
     <form id="filter" method="get">
         <div class="row">
