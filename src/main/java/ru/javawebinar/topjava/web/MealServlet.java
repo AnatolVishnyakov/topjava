@@ -6,7 +6,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.repository.jdbc.JdbcMealRepositoryImpl;
+import ru.javawebinar.topjava.repository.datajpa.DataJpaMealRepositoryImpl;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
@@ -36,7 +36,7 @@ public class MealServlet extends HttpServlet {
         super.init(config);
         WebApplicationContext springContext = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
         mealController = springContext.getBean(MealRestController.class);
-        repository = springContext.getBean(JdbcMealRepositoryImpl.class);
+        repository = springContext.getBean(DataJpaMealRepositoryImpl.class);
     }
 
     @Override
