@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
+@Transactional(readOnly = true)
 public class JdbcMealRepositoryImpl implements MealRepository {
     private static final BeanPropertyRowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
     private final SimpleJdbcInsert insertMeal;
@@ -55,6 +56,7 @@ public class JdbcMealRepositoryImpl implements MealRepository {
     }
 
     @Override
+    @Transactional
     public boolean delete(int id, int userId) {
         return jdbcTemplate.update("DELETE FROM meals WHERE id = ? AND user_id = ?", id, userId) != 0;
     }
