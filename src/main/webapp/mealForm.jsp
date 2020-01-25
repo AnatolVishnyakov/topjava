@@ -1,57 +1,40 @@
-<%--
-  Date: 05.10.2019
---%>
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
 <html>
-<head>
-    <title>Edit meal</title>
-
-    <style rel="stylesheet">
-        dl {
-            background: none repeat scroll 0 0 #FAFAFA;
-            margin: 8px 0;
-            padding: 0;
-        }
-
-        dt {
-            display: inline-block;
-            width: 170px;
-        }
-
-        dd {
-            display: inline-block;
-            margin-left: 8px;
-            vertical-align: top;
-        }
-    </style>
-</head>
+<jsp:include page="fragments/headTag.jsp"/>
+<jsp:include page="fragments/headTag.jsp"/>
 <body>
-<h3>
-    <a href="meals">Meals</a>
-</h3>
-<h2>${param.action == 'create' ? 'Create meal' : 'Edit meal'}</h2>
-<hr>
+<jsp:include page="fragments/bodyHeader.jsp"/>
 
-<jsp:useBean id="meal" scope="request" type="ru.javawebinar.topjava.model.Meal"/>
-<form method="post" action="meals">
-    <input type="hidden" name="id" value="${meal.id}">
-    <dl>
-        <dt>Дата/Время:</dt>
-        <dd><input type="datetime-local" name="dateTime" value="${meal.dateTime}"/></dd>
-    </dl>
-    <dl>
-        <dt>Описание:</dt>
-        <dd><input type="text" name="description" value="${meal.description}"/></dd>
-    </dl>
-    <dl>
-        <dt>Калории:</dt>
-        <dd><input type="number" name="calories" value="${meal.calories}"></dd>
-    </dl>
-
-    <button type="submit">Save</button>
-    <button type="button" onclick="window.history.back()">Cancel</button>
-</form>
-
+<section>
+    <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
+    <h3><spring:message code="${meal.isNew() ? 'meal.add' : 'meal.edit'}"/></h3>
+    <hr>
+    <form method="post" action="meals">
+        <input type="hidden" name="id" value="${meal.id}">
+        <dl>
+            <dt><spring:message code="meal.dateTime"/>:</dt>
+            <dt><spring:message code="meal.dateTime"/>:</dt>
+            <dd><input type="datetime-local" value="${meal.dateTime}" name="dateTime" required></dd>
+        </dl>
+        <dl>
+            <dt><spring:message code="meal.description"/>:</dt>
+            <dt><spring:message code="meal.description"/>:</dt>
+            <dd><input type="text" value="${meal.description}" size=40 name="description" required></dd>
+        </dl>
+        <dl>
+            <dt><spring:message code="meal.calories"/>:</dt>
+            <dt><spring:message code="meal.calories"/>:</dt>
+            <dd><input type="number" value="${meal.calories}" name="calories" required></dd>
+        </dl>
+        <button type="submit"><spring:message code="common.save"/></button>
+        <button onclick="window.history.back()" type="button"><spring:message code="common.cancel"/></button>
+        <button type="submit"><spring:message code="common.save"/></button>
+        <button onclick="window.history.back()" type="button"><spring:message code="common.cancel"/></button>
+    </form>
+</section>
+<jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>
