@@ -1,7 +1,7 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -16,7 +16,7 @@ abstract public class AbstractJpaUserServiceTest extends AbstractUserServiceTest
     @Autowired
     private JpaUtil jpaUtil;
 
-    @Before
+    @BeforeEach
     @Override
     public void setUp() {
         super.setUp();
