@@ -6,10 +6,10 @@ import java.util.Objects;
 // Еда с превышением калорий
 public class MealTo {
     private Integer id;
-    private final LocalDateTime dateTime;
-    private final String description;
-    private final int calories;
-    private final boolean excess; // превышение калорий
+    private LocalDateTime dateTime;
+    private String description;
+    private int calories;
+    private boolean excess; // превышение калорий
 
     public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
         this.id = id;
