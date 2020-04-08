@@ -11,6 +11,8 @@ public class MealTo {
     private int calories;
     private boolean excess; // превышение калорий
 
+    public MealTo() {}
+
     public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
         this.id = id;
         this.dateTime = dateTime;
