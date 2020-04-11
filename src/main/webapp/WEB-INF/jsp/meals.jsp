@@ -5,33 +5,38 @@
 <html>
 <jsp:include page="fragments/headTag.jsp"/>
 <body>
+<script type="text/javascript" src="resources/js/topjava.common.js" defer></script>
+<script type="text/javascript" src="resources/js/topjava.meals.js" defer></script>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 
-<section>
-    <h3><spring:message code="meal.title"/></h3>
+<div class="jumbotron pt-4">
+    <div class="container">
+        <h3 class="text-center"><spring:message code="meal.title"/></h3>
+        <form method="post" action="meals/filter">
+            <dl>
+                <dt><spring:message code="meal.startDate"/>:</dt>
+                <dd><input type="date" name="startDate" value="${param.startDate}"></dd>
+            </dl>
+            <dl>
+                <dt><spring:message code="meal.endDate"/>:</dt>
+                <dd><input type="date" name="endDate" value="${param.endDate}"></dd>
+            </dl>
+            <dl>
+                <dt><spring:message code="meal.startTime"/>:</dt>
+                <dd><input type="time" name="startTime" value="${param.startTime}"></dd>
+            </dl>
+            <dl>
+                <dt><spring:message code="meal.endTime"/>:</dt>
+                <dd><input type="time" name="endTime" value="${param.endTime}"></dd>
+            </dl>
+            <button type="submit"><spring:message code="meal.filter"/></button>
+        </form>
 
-    <form method="post" action="meals/filter">
-        <dl>
-            <dt><spring:message code="meal.startDate"/>:</dt>
-            <dd><input type="date" name="startDate" value="${param.startDate}"></dd>
-        </dl>
-        <dl>
-            <dt><spring:message code="meal.endDate"/>:</dt>
-            <dd><input type="date" name="endDate" value="${param.endDate}"></dd>
-        </dl>
-        <dl>
-            <dt><spring:message code="meal.startTime"/>:</dt>
-            <dd><input type="time" name="startTime" value="${param.startTime}"></dd>
-        </dl>
-        <dl>
-            <dt><spring:message code="meal.endTime"/>:</dt>
-            <dd><input type="time" name="endTime" value="${param.endTime}"></dd>
-        </dl>
-        <button type="submit"><spring:message code="meal.filter"/></button>
-        <hr>
-        <a href="meals/create"><spring:message code="meal.add"/></a>
-        <hr>
-        <table border="1" cellpadding="8" cellspacing="0">
+        <button class="btn btn-primary" onclick="add()">
+            <span class="fa fa-plus"></span>
+            <spring:message code="meal.add"/>
+        </button>
+        <table class="table table-striped" id="datatable">
             <thead>
             <tr>
                 <th><spring:message code="meal.dateTime"/></th>
@@ -41,7 +46,6 @@
                 <th></th>
             </tr>
             </thead>
-            <tbody>
             <jsp:useBean id="meals" scope="request"
                          type="java.util.List<ru.javawebinar.topjava.to.MealTo>"/>
             <c:forEach var="meal" items="${meals}">
@@ -55,9 +59,9 @@
                     <td><a href="meals/delete?id=${meal.id}"><spring:message code="common.delete"/></a></td>
                 </tr>
             </c:forEach>
-            </tbody>
         </table>
-</section>
+    </div>
+</div>
 <jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>
