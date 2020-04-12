@@ -1,34 +1,29 @@
-const ajaxUrl = "ajax/meals/";
-let datatableApi;
+function updateFilteredTable() {
+    $.ajax({
+        type: "GET",
+        url: "ajax/profile/meals/filter",
+        data: $("#filter").serialize()
+    }).done(updateTableByData);
+}
 
 $(function () {
-    datatableApi = $("#datatable").DataTable({
-        "paging": false,
-        "info": true,
-        "columns": [
-            {
-                "data": "dateTime"
-            },
-            {
-                "data": "description"
-            },
-            {
-                "data": "calories"
-            },
-            {
-                "defaultContent": "Edit",
-                "orderable": false
-            },
-            {
-                "defaultContent": "Delete",
-                "orderable": false
-            }
-        ],
-        "order": [
-            [
-                0,
-                "asc"
+    makeEditable({
+        ajaxUrl: "ajax/profile/meals/",
+        datatableApi: $("#datatable1").DataTable({
+            "paging": false,
+            "info": true,
+            "columns": [
+                {
+                    "data": "dateTime"
+                },
+                {
+                    "data": "description"
+                },
+                {
+                    "data": "calories"
+                },
             ]
-        ]
+        }),
+        updateTable: updateFilteredTable
     });
 });
