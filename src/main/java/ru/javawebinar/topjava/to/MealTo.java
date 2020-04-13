@@ -4,8 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 // Еда с превышением калорий
-public class MealTo {
-    private Integer id;
+public class MealTo extends BaseTo {
     private LocalDateTime dateTime;
     private String description;
     private int calories;
@@ -14,7 +13,7 @@ public class MealTo {
     public MealTo() {}
 
     public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
-        this.id = id;
+        super(id);
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
@@ -35,14 +34,6 @@ public class MealTo {
 
     public boolean isExcess() {
         return excess;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     @Override
