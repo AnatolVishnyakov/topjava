@@ -13,6 +13,31 @@ function clearFilter() {
     $.get(mealAjaxUrl, updateTableByData);
 }
 
+function loadDatePicker(id) {
+    $('#' + id).datetimepicker({
+        timepicker: false,
+        format: 'Y-m-d',
+        formatDate: 'Y-m-d',
+        onShow: function (ct) {
+            this.setOptions({
+                maxDate: this.val() ? this.val() : false
+            })
+        }
+    });
+}
+
+function loadTimePicker(id) {
+    $('#' + id).datetimepicker({
+        datepicker: false,
+        format: 'H:i',
+        onShow: function (ct) {
+            this.setOptions({
+                maxTime: this.val() ? this.val() : false
+            })
+        }
+    });
+}
+
 $(function () {
     makeEditable({
         ajaxUrl: mealAjaxUrl,
@@ -22,7 +47,7 @@ $(function () {
                     "data": "dateTime",
                     "render": function (date, type, row) {
                         if (type === 'display') {
-                            return date.replace('T', ' ').substr(0, 16);
+                            return formatDate(date);
                         }
                         return date;
                     }
@@ -55,5 +80,13 @@ $(function () {
             },
         },
         updateTable: updateFilteredTable
+    });
+
+    loadDatePicker("startDate");
+    loadDatePicker("endDate");
+    loadTimePicker("startTime");
+    loadTimePicker("endTime");
+    $("#dateTime").datetimepicker({
+        format: 'Y-m-d H:i'
     });
 });
