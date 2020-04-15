@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.TestUtil.*;
-import static ru.javawebinar.topjava.UserTestData.USER;
+import static ru.javawebinar.topjava.UserTestData.*;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 import static ru.javawebinar.topjava.util.MealsUtil.createWithExcess;
 import static ru.javawebinar.topjava.util.MealsUtil.getWithExcess;
@@ -29,12 +29,19 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testGet() throws Exception {
-        mockMvc.perform(get(REST_URL + MEAL1_ID)
-                .with(userHttpBasic(USER)))
+        mockMvc.perform(get(REST_URL + ADMIN_MEAL_ID)
+                .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertMatch(readFromJsonMvcResult(result, Meal.class), MEAL1));
+                .andExpect(result -> assertMatch(readFromJsonMvcResult(result, Meal.class), ADMIN_MEAL1));
+    }
+
+
+    @Test
+    void testGetUnauth() throws Exception {
+        mockMvc.perform(get(REST_URL + MEAL1_ID))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -50,9 +57,9 @@ class MealRestControllerTest extends AbstractControllerTest {
         Meal updated = getUpdated();
 
         mockMvc.perform(put(REST_URL + MEAL1_ID)
-                .with(userHttpBasic(USER))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated)))
+                .content(JsonUtil.writeValue(updated))
+                .with(userHttpBasic(USER)))
                 .andExpect(status().isNoContent());
 
         assertMatch(service.get(MEAL1_ID, START_SEQ), updated);
@@ -62,15 +69,15 @@ class MealRestControllerTest extends AbstractControllerTest {
     void testCreate() throws Exception {
         Meal created = getCreated();
         ResultActions action = mockMvc.perform(post(REST_URL)
-                .with(userHttpBasic(USER))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(created)));
+                .content(JsonUtil.writeValue(created))
+                .with(userHttpBasic(ADMIN)));
 
         Meal returned = readFromJsonResultActions(action, Meal.class);
         created.setId(returned.getId());
 
         assertMatch(returned, created);
-        assertMatch(service.getAll(START_SEQ), created, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1);
+        assertMatch(service.getAll(ADMIN_ID), ADMIN_MEAL2, created, ADMIN_MEAL1);
     }
 
     @Test
