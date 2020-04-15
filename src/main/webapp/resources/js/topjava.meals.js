@@ -14,17 +14,17 @@ function clearFilter() {
 }
 
 // http://api.jquery.com/jQuery.ajax/#using-converters
-$.ajaxSetup({
-    converters: {
-        "text json": function (stringData) {
-            const json = JSON.parse(stringData);
-            $(json).each(function () {
-                this.dateTime = this.dateTime.replace('T', ' ').substr(0, 16);
-            });
-            return json;
-        }
-    }
-});
+// $.ajaxSetup({
+//     converters: {
+//         "text json": function (stringData) {
+//             const json = JSON.parse(stringData);
+//             $(json).each(function () {
+//                 this.dateTime = this.dateTime.replace('T', ' ').substr(0, 16);
+//             });
+//             return json;
+//         }
+//     }
+// });
 
 $(function () {
     makeEditable({
@@ -32,7 +32,7 @@ $(function () {
         datatableOpts: {
             "columns": [
                 {
-                    "data": "dateTime"
+                    "data": "dateTimeUI"
                 },
                 {
                     "data": "description"
