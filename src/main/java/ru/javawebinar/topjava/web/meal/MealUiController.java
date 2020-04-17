@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/ajax/profile/meals")
-public class MealAjaxController extends AbstractMealController {
+public class MealUiController extends AbstractMealController {
     @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @JsonView(View.JsonUI.class)
@@ -51,7 +51,7 @@ public class MealAjaxController extends AbstractMealController {
         } else {
             super.update(meal, meal.getId());
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @Override
