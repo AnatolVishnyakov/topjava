@@ -74,6 +74,7 @@
         <context:property-placeholder location="classpath:/db/heroku.properties" system-properties-mode="OVERRIDE"/>
 
         <bean class="java.net.URI" id="dbUrl">
+            <!-- DATABASE_URL приходит из переменных окружения heroku -->
             <constructor-arg value="${DATABASE_URL}"/>
         </bean>
         <bean id="dataSource"
